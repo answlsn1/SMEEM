@@ -152,7 +152,7 @@ function App() {
           <section className="hero" aria-labelledby="hero-title">
             <div className="hero-copy">
               <p className="eyebrow"><span className="tiny-line" /> A SCENT THAT BECOMES YOU</p>
-              <h1 id="hero-title"><span className="hero-kicker">향이 기억에<br />스미는 시간,</span><span className="hero-brand">스밈<span className="hero-period">.</span></span></h1>
+              <h1 id="hero-title"><span className="hero-kicker">향이 기억에<br />스미는 시간,</span><span className="hero-brand">스밈</span></h1>
               <p className="hero-description">보이지 않지만, 오래 남는 것.<br />당신의 기억과 감정이 하나의 향이 되는 곳.</p>
               <a href="#your-scent" className="button button-olive">나를 닮은 향 만나보기 <ArrowUpRight size={18} strokeWidth={1.5} /></a>
               <div className="hero-bottom"><span>천천히, 깊게.<br />당신의 일상에 스며들어요.</span><a href="#story" aria-label="스밈의 이야기로 내려가기"><span>SCROLL TO DISCOVER</span><ArrowDown size={16} strokeWidth={1} /></a></div>
@@ -169,7 +169,7 @@ function App() {
           <section className="story section-wrap" id="story" aria-labelledby="story-title">
             <div className="section-label"><span>01 / OUR STORY</span><span>향이 일상에 스미는 공간</span></div>
             <div className="story-grid">
-              <div className="story-heading"><p className="eyebrow">INVISIBLE, BUT UNFORGETTABLE</p><h2 id="story-title">어떤 향은,<br />우리를 그날로<br />데려가요.</h2><img className="story-monogram" src={asset('images/smeem-monogram.png')} width="44" height="53" alt="스밈 심벌" loading="lazy" /></div>
+              <div className="story-heading"><p className="eyebrow">INVISIBLE, BUT UNFORGETTABLE</p><h2 id="story-title">향으로 떠오르는<br />그날의 기억.</h2><img className="story-monogram" src={asset('images/smeem-monogram.png')} width="44" height="53" alt="스밈 심벌" loading="lazy" /></div>
               <div className="story-copy"><p className="story-intro">향은 보이지 않아도 오래 남아요.</p><p>어느 날의 공기, 좋아했던 사람의 향기.<br />여행지에서 맡았던 낯선 향,<br />문득 떠오르는 어느 계절의 기억처럼.</p><p>스밈은 당신의 취향과 이야기가<br />하나의 향으로 천천히 스며드는 공간이에요.</p><p>오늘의 감정이 향이 되고,<br />그 향이 다시 당신의 기억이 되도록.</p><div className="story-signature"><span>당신의 이야기가, 당신의 향이 돼요.</span><span className="signature">smeem</span></div></div>
             </div>
           </section>
@@ -187,7 +187,7 @@ function App() {
           <section className="scent section-wrap" id="your-scent" aria-labelledby="scent-title">
             <div className="section-label"><span>03 / YOUR SCENT, YOUR STORY</span><span>오늘의 감정을 향으로 담다</span></div>
             <div className="section-heading"><div><p className="eyebrow">HOW ARE YOU FEELING TODAY?</p><h2 id="scent-title">오늘의 마음에,<br />어떤 향이 스밀까요?</h2></div><p>정답은 없어요.<br />지금 당신의 마음에 가까운 단어를 골라보세요.</p></div>
-            <div className="mood-tabs" role="tablist" aria-label="오늘의 마음 선택">{moods.map((item, i) => <button key={item.name} id={`mood-tab-${i}`} role="tab" aria-selected={activeMood === i} aria-controls="mood-panel" tabIndex={activeMood === i ? 0 : -1} ref={el => { moodRefs.current[i] = el }} onClick={() => setActiveMood(i)} onKeyDown={event => changeMood(event, i)}><span className="mood-number">0{i + 1}</span>{item.name}<span className="mood-indicator">{activeMood === i ? <Minus size={17} /> : <Plus size={17} />}</span></button>)}</div>
+            <div className="mood-tabs" role="tablist" aria-label="오늘의 마음 선택" aria-orientation="horizontal">{moods.map((item, i) => <button key={item.name} id={`mood-tab-${i}`} role="tab" aria-selected={activeMood === i} aria-controls="mood-panel" tabIndex={activeMood === i ? 0 : -1} ref={el => { moodRefs.current[i] = el }} onClick={() => setActiveMood(i)} onKeyDown={event => changeMood(event, i)}><span className="mood-number">0{i + 1}</span>{item.name}</button>)}</div>
             <div className="mood-panel" id="mood-panel" role="tabpanel" aria-labelledby={`mood-tab-${activeMood}`} tabIndex={0}>
               <ScentArtwork index={activeMood} />
               <div className="mood-copy" key={mood.name}><p className="eyebrow">{mood.english}</p><h3>{mood.title}</h3><p className="mood-description">{mood.description}</p><div className="scent-notes"><span>떠올려 볼 향</span><div>{mood.notes.map(note => <span key={note}>{note}</span>)}</div></div><button className="text-link" onClick={event => { noteTriggerRef.current = event.currentTarget; setNoteOpen(true); setNoteSaved(false) }}>이 마음, 향 노트에 담기 <ArrowUpRight size={18} strokeWidth={1.5} /></button></div>
@@ -201,6 +201,7 @@ function App() {
             <div className="faq-heading"><p className="eyebrow">A LITTLE MORE ABOUT SMEEM</p><h2 id="faq-title">궁금한 이야기</h2><p>스밈을 만나기 전,<br />조금 더 가까워지는 시간.</p></div>
             <div className="faq-list">{[
               { title: '향수를 잘 몰라도 괜찮을까요?', answer: <>향을 잘 몰라도 괜찮아요. 좋아하는 풍경과 계절, 지금의 기분에서부터 천천히 시작해 보세요. 마음이 머무는 향을 따라가다 보면, 나만의 취향을 조금씩 만나게 될 거예요.</> },
+              { title: '간직하고 싶은 기억은 어떤 향일까요?', answer: <>좋아하던 계절의 공기나 문득 그리운 장면을 떠올려 보세요. 그때의 온기와 기분을 따라가다 보면, 그 기억을 닮은 향이 조금씩 떠오를 거예요.</> },
               { title: '공방 소식과 방문 문의는 어디에서 하나요?', answer: <>스밈의 인스타그램에서 공방 소식을 확인하고 방문 관련 문의를 남기실 수 있어요. <a href={instagram} target="_blank" rel="noopener noreferrer">@official_smeem <ArrowUpRight size={13} /></a></> },
             ].map((item, i) => <article className={`faq-item ${openFaq === i ? 'is-open' : ''}`} key={item.title}><h3><button aria-expanded={openFaq === i} aria-controls={`faq-answer-${i}`} id={`faq-question-${i}`} onClick={() => setOpenFaq(openFaq === i ? null : i)}>{item.title}{openFaq === i ? <Minus size={18} strokeWidth={1.5} /> : <Plus size={18} strokeWidth={1.5} />}</button></h3><div id={`faq-answer-${i}`} role="region" aria-labelledby={`faq-question-${i}`} hidden={openFaq !== i}><p>{item.answer}</p></div></article>)}</div>
           </section>
