@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { moods } from './moods'
+import ScentCarousel from './ScentCarousel'
 import type { FormEvent, KeyboardEvent, SVGProps } from 'react'
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Download, Droplets, FlaskConical, Leaf, Menu, Minus, NotebookPen, Plus, X } from 'lucide-react'
 
@@ -11,9 +12,9 @@ function Instagram({ size = 24, strokeWidth = 2, ...props }: SVGProps<SVGSVGElem
 }
 
 const navigation = [
+  { label: '오늘의 향', href: '#your-scent' },
   { label: '스밈의 이야기', href: '#story' },
   { label: '향을 만나는 시간', href: '#experience' },
-  { label: '오늘의 향', href: '#your-scent' },
 ]
 
 function Brand({ footer = false }: { footer?: boolean }) {
@@ -25,27 +26,6 @@ function Brand({ footer = false }: { footer?: boolean }) {
   )
 }
 
-function ScentArtwork({ index }: { index: number }) {
-  const mood = moods[index]
-  return (
-    <div className="scent-art">
-      <img
-        key={mood.image}
-        className="scent-image"
-        src={asset(`images/moods/${mood.image}`)}
-        alt={mood.imageAlt}
-        style={{ objectPosition: mood.imagePosition }}
-        width="1100"
-        height="1100"
-        loading="lazy"
-        decoding="async"
-      />
-      <span className="art-corner">SCENT OF YOUR MOMENT</span>
-      <div className="art-caption"><span>No. 0{index + 1}</span><span>{mood.family}</span></div>
-    </div>
-  )
-}
-
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeMood, setActiveMood] = useState(0)
@@ -53,7 +33,6 @@ function App() {
   const [noteOpen, setNoteOpen] = useState(false)
   const [note, setNote] = useState('')
   const [noteSaved, setNoteSaved] = useState(false)
-  const moodRefs = useRef<(HTMLButtonElement | null)[]>([])
   const menuToggleRef = useRef<HTMLButtonElement>(null)
   const noteTriggerRef = useRef<HTMLButtonElement | null>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -101,18 +80,6 @@ function App() {
       previousFocus?.focus()
     }
   }, [noteOpen])
-
-  function changeMood(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    let next = index
-    if (event.key === 'ArrowRight') next = (index + 1) % moods.length
-    else if (event.key === 'ArrowLeft') next = (index + moods.length - 1) % moods.length
-    else if (event.key === 'Home') next = 0
-    else if (event.key === 'End') next = moods.length - 1
-    else return
-    event.preventDefault()
-    setActiveMood(next)
-    moodRefs.current[next]?.focus()
-  }
 
   function trapDialogFocus(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key !== 'Tab') return
@@ -170,7 +137,7 @@ function App() {
               <h1 id="hero-title"><span className="hero-kicker">향이 기억에<br />스미는 시간,</span><span className="hero-brand">스밈</span></h1>
               <p className="hero-description">보이지 않지만, 오래 남는 것.<br />당신의 기억과 감정이 하나의 향이 되는 곳.</p>
               <a href="#your-scent" className="button button-olive">나를 닮은 향 만나보기 <ArrowUpRight size={18} strokeWidth={1.5} /></a>
-              <div className="hero-bottom"><span>천천히, 깊게.<br />당신의 일상에 스며들다.</span><a href="#story" aria-label="스밈의 이야기로 내려가기"><span>SCROLL TO DISCOVER</span><ArrowDown size={16} strokeWidth={1} /></a></div>
+              <div className="hero-bottom"><span>천천히, 깊게.<br />당신의 일상에 스며들다.</span><a href="#your-scent" aria-label="오늘의 향으로 내려가기"><span>SCROLL TO DISCOVER</span><ArrowDown size={16} strokeWidth={1} /></a></div>
             </div>
             <div className="hero-visual">
               <img src={asset('images/smeem-still-life.webp')} alt="따뜻한 햇살과 올리브 가지, 린넨 위 향수병으로 표현한 스밈의 감성 이미지" fetchPriority="high" className="hero-photo" />
@@ -181,8 +148,24 @@ function App() {
 
           <div className="brand-ribbon" aria-hidden="true"><span>SCENT</span><span className="ribbon-dot" /><span>MEMORY</span><span className="ribbon-dot" /><span>EMOTION</span><span className="ribbon-line" /><span className="ribbon-korean">향으로 스며들다</span><span className="ribbon-line" /><span>SMEEM PERFUME STUDIO</span></div>
 
+          <section className="scent section-wrap" id="your-scent" aria-labelledby="scent-title">
+            <div className="section-label"><span>01 / YOUR SCENT, YOUR STORY</span><span>오늘의 감정을 향으로 담다</span></div>
+            <div className="section-heading"><div><p className="eyebrow">HOW ARE YOU FEELING TODAY?</p><h2 id="scent-title">오늘의 마음에,<br />어떤 향이 스밀까요?</h2></div><p>정답은 없습니다.<br />지금 당신의 마음에 가까운 단어를 골라보세요.</p></div>
+            <ScentCarousel
+              activeMood={activeMood}
+              onMoodChange={setActiveMood}
+              noteOpen={noteOpen}
+              onOpenNote={trigger => {
+                noteTriggerRef.current = trigger
+                setNoteOpen(true)
+                setNoteSaved(false)
+              }}
+            />
+            <p className="scent-footnote"><Leaf size={13} strokeWidth={1.3} /> 오늘의 마음에서 향을 떠올려 보세요. 나를 닮은 향은 언제든 새롭게 발견할 수 있습니다.</p>
+          </section>
+
           <section className="story section-wrap" id="story" aria-labelledby="story-title">
-            <div className="section-label"><span>01 / OUR STORY</span><span>향이 일상에 스미는 공간</span></div>
+            <div className="section-label"><span>02 / OUR STORY</span><span>향이 일상에 스미는 공간</span></div>
             <div className="story-grid">
               <div className="story-heading"><p className="eyebrow">INVISIBLE, BUT UNFORGETTABLE</p><h2 id="story-title">향으로 떠오르는<br />그날의 기억.</h2><img className="story-monogram" src={asset('images/smeem-monogram.png')} width="44" height="53" alt="스밈 심벌" loading="lazy" /></div>
               <div className="story-copy"><p className="story-intro">향은 보이지 않아도 오래 남아요.</p><p>어느 날의 공기, 좋아했던 사람의 향기.<br />여행지에서 맡았던 낯선 향,<br />문득 떠오르는 어느 계절의 기억처럼.</p><p>스밈은 당신의 취향과 이야기가<br />하나의 향으로 천천히 스며드는 공간이에요.</p><p>오늘의 감정이 향이 되고,<br />그 향이 다시 당신의 기억이 되도록.</p><div className="story-signature"><span>당신의 이야기가, 당신의 향이 됩니다.</span><span className="signature">smeem</span></div></div>
@@ -191,23 +174,12 @@ function App() {
 
           <section className="experience" id="experience" aria-labelledby="experience-title">
             <div className="section-wrap">
-              <div className="section-label"><span>02 / THE EXPERIENCE</span><span>향을 만나는 시간</span></div>
+              <div className="section-label"><span>03 / THE EXPERIENCE</span><span>향을 만나는 시간</span></div>
               <div className="section-heading"><div><p className="eyebrow">MORE THAN MAKING A PERFUME</p><h2 id="experience-title">향수를 만드는 시간을 넘어,<br /><span>나를 알아가는 시간.</span></h2></div><p>정해진 답을 찾기보다, 마음이 머무는 향을 따라.<br />스밈에서 당신만의 이야기를 천천히 펼쳐보세요.</p></div>
               <div className="experience-grid">
                 {[{ num: '01', icon: <NotebookPen />, title: '기억을 꺼내다', english: 'RECALL YOUR MOMENT', text: <>좋아하는 계절, 잊히지 않는 장면.<br />향으로 간직하고 싶은 기억을 떠올리다.</> }, { num: '02', icon: <Droplets />, title: '취향을 발견하다', english: 'FOLLOW YOUR SENSES', text: <>낯선 향과 익숙한 향 사이에서,<br />내 마음이 이끌리는 향을 만나보세요.</> }, { num: '03', icon: <FlaskConical />, title: '나의 향으로 담다', english: 'EXPRESS YOURSELF', text: <>서로 다른 향에 나만의 이야기를 더해,<br />오늘의 감정을 하나의 향으로 표현하다.</> }].map(step => <article className="experience-step" key={step.num}><div className="step-top"><span>{step.num}</span>{step.icon}</div><p className="eyebrow">{step.english}</p><h3>{step.title}</h3><p className="step-description">{step.text}</p></article>)}
               </div>
             </div>
-          </section>
-
-          <section className="scent section-wrap" id="your-scent" aria-labelledby="scent-title">
-            <div className="section-label"><span>03 / YOUR SCENT, YOUR STORY</span><span>오늘의 감정을 향으로 담다</span></div>
-            <div className="section-heading"><div><p className="eyebrow">HOW ARE YOU FEELING TODAY?</p><h2 id="scent-title">오늘의 마음에,<br />어떤 향이 스밀까요?</h2></div><p>정답은 없습니다.<br />지금 당신의 마음에 가까운 단어를 골라보세요.</p></div>
-            <div className="mood-tabs" role="tablist" aria-label="오늘의 마음 선택" aria-orientation="horizontal">{moods.map((item, i) => <button key={item.name} id={`mood-tab-${i}`} role="tab" aria-selected={activeMood === i} aria-controls="mood-panel" tabIndex={activeMood === i ? 0 : -1} ref={el => { moodRefs.current[i] = el }} onClick={() => setActiveMood(i)} onKeyDown={event => changeMood(event, i)}><span className="mood-number">0{i + 1}</span>{item.name}</button>)}</div>
-            <div className="mood-panel" id="mood-panel" role="tabpanel" aria-labelledby={`mood-tab-${activeMood}`} tabIndex={0}>
-              <ScentArtwork index={activeMood} />
-              <div className="mood-copy" key={mood.name}><p className="eyebrow">{mood.english}</p><h3>{mood.title}</h3><p className="mood-description">{mood.description}</p><div className="scent-notes"><span>떠올려 볼 향</span><div>{mood.notes.map(note => <span key={note}>{note}</span>)}</div></div><button className="text-link" onClick={event => { noteTriggerRef.current = event.currentTarget; setNoteOpen(true); setNoteSaved(false) }}>이 마음, 향 노트에 담기 <ArrowUpRight size={18} strokeWidth={1.5} /></button></div>
-            </div>
-            <p className="scent-footnote"><Leaf size={13} strokeWidth={1.3} /> 오늘의 마음에서 향을 떠올려 보세요. 나를 닮은 향은 언제든 새롭게 발견할 수 있습니다.</p>
           </section>
 
           <section className="brand-quote" aria-label="스밈의 약속"><span className="quote-mark">“</span><p><span className="quote-lead">나를 닮은 향 하나가,</span><span className="quote-line">일상을 조금 더 <em>나답게.</em></span></p><span className="eyebrow">SLOWLY, DEEPLY, INTO YOUR EVERYDAY.</span><svg viewBox="0 0 500 210" fill="none" aria-hidden="true" className="quote-lines"><ellipse cx="270" cy="142" rx="242" ry="74" stroke="currentColor" /><ellipse cx="270" cy="142" rx="210" ry="60" stroke="currentColor" /><ellipse cx="270" cy="142" rx="177" ry="46" stroke="currentColor" /></svg></section>
