@@ -42,19 +42,26 @@ npm run preview
 
 ## 인터넷 공개 배포
 
-GitHub Pages용 빌드는 저장소 경로 `/SMEEM/`에 맞춰 이미지·아이콘·글꼴 주소를 생성합니다.
+공개 주소는 https://smeem-atelier.com 입니다. 도메인은 Porkbun에서 관리하고, 호스팅은 GitHub Pages입니다.
 
 ```sh
-npm run build:pages
-npm run preview -- --base=/SMEEM/
+npm run build
+npm run preview
 ```
 
-공개 주소는 https://answlsn1.github.io/SMEEM/ 입니다.
-
 - `site-source` 브랜치에 편집 가능한 React 소스를 보관합니다.
-- `main` 브랜치에는 `npm run build:pages`로 만든 `dist/`의 내용과 `.nojekyll`을 보관합니다. GitHub Pages는 현재 `main`의 루트에서 배포합니다.
+- `main` 브랜치에는 `npm run build`로 만든 `dist/`의 내용과 `.nojekyll`을 보관합니다. GitHub Pages는 현재 `main`의 루트에서 배포합니다.
+- `public/CNAME`에 적힌 `smeem-atelier.com`이 빌드 결과에 포함되어 GitHub Pages의 커스텀 도메인 설정을 유지합니다. 이 파일을 지우면 커스텀 도메인 연결이 풀립니다.
 - 수정 후에는 빌드를 확인하고 소스를 `site-source`에 푸시한 다음, 별도 `main` 작업 트리에 빌드 결과를 반영해 푸시합니다. 공개 페이지와 주요 자산이 새 버전으로 제공되는지 확인해야 배포가 완료됩니다.
 
-`.github/workflows/deploy-pages.yml`은 향후 GitHub Actions 방식으로 전환할 때 사용할 설정이며, 현재 배포에는 사용하지 않습니다. 전환하려면 저장소의 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 변경하고, 소스가 있는 배포 브랜치에 맞춰 워크플로의 `push.branches`를 수정해야 합니다.
+### Porkbun DNS 레코드
 
-일반 도메인의 루트에 배포할 때는 기존 `npm run build`를 사용합니다. 정적 파일은 모두 `dist/`에 생성됩니다. 배포에는 판매·결제 기능이나 별도 데이터 수집 서버가 추가되지 않습니다.
+| 종류 | 호스트 | 값 |
+|---|---|---|
+| A | (비움, 루트) | 185.199.108.153 |
+| A | (비움, 루트) | 185.199.109.153 |
+| A | (비움, 루트) | 185.199.110.153 |
+| A | (비움, 루트) | 185.199.111.153 |
+| CNAME | www | answlsn1.github.io |
+
+`.github/workflows/deploy-pages.yml`은 향후 GitHub Actions 방식으로 전환할 때 사용할 설정이며, 현재 배포에는 사용하지 않습니다. 전환하려면 저장소의 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 변경하고, 소스가 있는 배포 브랜치에 맞춰 워크플로의 `push.branches`를 수정해야 합니다.
