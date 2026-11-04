@@ -146,6 +146,7 @@ export default function ScentCarousel({ activeMood, onMoodChange, onOpenNote, no
   return (
     <div
       className="scent-carousel"
+      data-reveal=""
       ref={carouselRef}
       role="region"
       aria-roledescription="캐러셀"

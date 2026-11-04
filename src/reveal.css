@@ -1,0 +1,16 @@
+/* Mobile scroll reveal. Only elements the hook marks data-reveal="hidden" are
+   hidden, so content never disappears without the script that brings it back.
+   Stagger delays are set inline by the hook when several blocks arrive together. */
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+  [data-reveal="hidden"],
+  [data-reveal="shown"] {
+    transition:
+      opacity .75s cubic-bezier(.22, .61, .36, 1),
+      transform .85s cubic-bezier(.22, .61, .36, 1);
+  }
+
+  [data-reveal="hidden"] {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+}

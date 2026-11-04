@@ -38,7 +38,7 @@ npm run preview
 
 주요 화면·문구는 `src/App.tsx`, 감정별 문구·이미지는 `src/moods.ts`, 스타일은 `src/styles.css`, 검색엔진 메타데이터는 `index.html`에서 관리합니다.
 
-향 슬라이드는 `src/ScentCarousel.tsx`와 `src/carousel.css`에서 관리합니다. ‘오늘의 향 카드 뽑기’ 기획은 독립 후속 프로젝트로 보류하고 [`docs/future-projects/daily-scent-cards.md`](docs/future-projects/daily-scent-cards.md)에 정리했습니다.
+향 슬라이드는 `src/ScentCarousel.tsx`와 `src/carousel.css`에서 관리합니다. 모바일(700px 이하)에서 스크롤에 따라 섹션이 나타나는 효과는 `src/useScrollReveal.ts`와 `src/reveal.css`에서 관리하며, `data-reveal` 속성이 붙은 요소에만 적용되고 움직임 줄이기 설정에서는 꺼집니다. ‘오늘의 향 카드 뽑기’ 기획은 독립 후속 프로젝트로 보류하고 [`docs/future-projects/daily-scent-cards.md`](docs/future-projects/daily-scent-cards.md)에 정리했습니다.
 
 ## 인터넷 공개 배포
 
